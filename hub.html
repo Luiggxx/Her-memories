@@ -10,12 +10,20 @@
             background-color: #ffe4e1;
             font-family: Arial, sans-serif;
             overflow: hidden;
+            position: relative;
         }
+        h1, h3 {
+            position: relative;
+            z-index: 10;
+        }
+        /* Animação de corações */
         .coracao {
             position: absolute;
             color: red;
-            font-size: 20px;
-            animation: cair 3s linear infinite;
+            font-size: 30px;
+            animation: cair 4s linear infinite;
+            left: calc(10% + 80% * var(--random));
+            opacity: 0.8;
         }
         @keyframes cair {
             0% { transform: translateY(-50px); opacity: 1; }
@@ -26,29 +34,44 @@
 <body>
 
     <h1>Feliz Dia das Mulheres, Meu Amor! 💖</h1>
-    <h3>Eu te amo desde <span id="tempo"></span></h3>
+    <h3>Eu te amo há <span id="tempo"></span> dias!</h3>
 
     <!-- Player de Música -->
-    <audio id="player" src="URL_DA_SUA_MUSICA" preload="auto"></audio>
+    <iframe style="border-radius:12px" 
+        src="https://open.spotify.com/embed/track/6SKwQghsR8AISlxhcwyA9R?utm_source=generator" 
+        width="300" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+    </iframe>
 
     <script>
-        var player = document.getElementById("player");
-
+        // Tocar música automaticamente se permitido pelo navegador
         window.onload = function() {
             if (localStorage.getItem("tocarMusica") === "sim") {
-                player.play().catch(error => console.log("Erro ao iniciar música:", error));
+                let iframe = document.querySelector("iframe");
+                iframe.src += "&autoplay=1"; // Força autoplay no Spotify
                 localStorage.removeItem("tocarMusica"); // Remove a flag para evitar repetição
             }
         };
 
         // Contador de dias de amor
         function contarTempo() {
-            let inicio = new Date("ANO-MES-DIA"); // Coloque a data em que vocês se conheceram
+            let inicio = new Date("2021-12-08"); // Data que vocês se viram pela primeira vez
             let agora = new Date();
-            let diff = Math.floor((agora - inicio) / (1000 * 60 * 60 * 24));
-            document.getElementById("tempo").innerText = diff + " dias";
+            let diff = Math.floor((agora - inicio) / (1000 * 60 * 60 * 24)); // Diferença em dias
+            document.getElementById("tempo").innerText = diff;
         }
         contarTempo();
+
+        // Criar animação de corações caindo
+        function criarCoracoes() {
+            let coracao = document.createElement("div");
+            coracao.className = "coracao";
+            coracao.innerHTML = "❤️";
+            coracao.style.setProperty("--random", Math.random()); // Posição aleatória
+            document.body.appendChild(coracao);
+            setTimeout(() => coracao.remove(), 4000); // Remover após animação
+        }
+        setInterval(criarCoracoes, 500); // Criar corações a cada meio segundo
+
     </script>
 
 </body>
